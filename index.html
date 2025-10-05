@@ -22,6 +22,19 @@
             height: auto;
             border-radius: 16px;
             box-shadow: 0 4px 24px rgba(63,81,181,0.15);
+            cursor: pointer; /* make it obvious the logo is clickable */
+            transition: transform 150ms ease;
+        }
+        .header img:active { transform: scale(0.98); }
+        /* full-screen canvas for confetti - sits above the page content but doesn't block interactions */
+        .confetti-canvas {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
         }
         .brand {
             font-family: 'Montserrat', Arial, sans-serif;
@@ -90,7 +103,7 @@
 </head>
 <body>
     <div class="header">
-        <img src="Logo.jpg" alt="Discowasher Logo">
+        <img id="logo" src="Logo.jpg" alt="Discowasher Logo" title="Click me for confetti!">
         <div class="brand">Discowasher</div>
         <p class="tagline">Revolutionize your cleaning routine</p>
     </div>
@@ -104,5 +117,103 @@
             <a href="order.html"><button class="cta-btn">Shop Now</button></a>
         </div>
     </div>
+    <!-- Confetti canvas -->
+    <canvas id="confetti-canvas" class="confetti-canvas" aria-hidden="true"></canvas>
+
+    <script>
+        // Lightweight confetti implementation
+        (function(){
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            let W = canvas.width = window.innerWidth;
+            let H = canvas.height = window.innerHeight;
+            let particles = [];
+
+            function random(min, max){ return Math.random()*(max-min)+min; }
+
+            function resize(){
+                W = canvas.width = window.innerWidth;
+                H = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+
+            function createConfetti(x, y, count){
+                const colors = ['#f94144','#f3722c','#f9c74f','#90be6d','#577590','#277da1','#ff6b6b'];
+                for(let i=0;i<count;i++){
+                    particles.push({
+                        x: x + random(-10,10),
+                        y: y + random(-10,10),
+                        vx: random(-6,6),
+                        vy: random(-10,-2),
+                        size: Math.floor(random(6,12)),
+                        life: Math.floor(random(50,120)),
+                        tilt: random(-0.3,0.3),
+                        color: colors[Math.floor(random(0,colors.length))]
+                    });
+                }
+            }
+
+            function update(){
+                for(let i=particles.length-1;i>=0;i--){
+                    const p = particles[i];
+                    p.vy += 0.25; // gravity
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vx *= 0.99; p.vy *= 0.99;
+                    p.tilt += 0.02;
+                    p.life -= 1;
+                    if(p.y > H + 50 || p.x < -50 || p.x > W+50 || p.life <= 0){
+                        particles.splice(i,1);
+                    }
+                }
+            }
+
+            function draw(){
+                ctx.clearRect(0,0,W,H);
+                particles.forEach(p=>{
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.tilt);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+                    ctx.restore();
+                });
+            }
+
+            function loop(){
+                update();
+                draw();
+                if(particles.length>0) requestAnimationFrame(loop);
+            }
+
+            // Public trigger: burst confetti at client coordinates
+            function burstAt(clientX, clientY){
+                // convert client coords to canvas coords (same in this setup)
+                createConfetti(clientX, clientY, 40);
+                // ensure loop is running
+                if(particles.length>0) requestAnimationFrame(loop);
+            }
+
+            // Hook up logo click
+            const logo = document.getElementById('logo');
+            logo.addEventListener('click', function(e){
+                // get click position (center of logo if clicking padding)
+                const rect = logo.getBoundingClientRect();
+                const x = rect.left + rect.width/2;
+                const y = rect.top + rect.height/2;
+                burstAt(x, y);
+            });
+
+            // Also allow keyboard activation (accessibility)
+            logo.setAttribute('tabindex', '0');
+            logo.addEventListener('keydown', function(e){
+                if(e.key === 'Enter' || e.key === ' '){
+                    const rect = logo.getBoundingClientRect();
+                    burstAt(rect.left + rect.width/2, rect.top + rect.height/2);
+                    e.preventDefault();
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

@@ -93,6 +93,20 @@
 
         @keyframes float{ 0%{ transform:translateY(0) } 50%{ transform:translateY(-8px) } 100%{ transform:translateY(0) } }
         @media (prefers-reduced-motion: reduce){ .header img, .product-img{ animation:none; transition:none } }
+    /* feature icons */
+    .features{ display:flex; gap:18px; margin-top:20px; justify-content:flex-start; align-items:center }
+    .feature{ display:flex; gap:10px; align-items:center; background: rgba(255,255,255,0.6); padding:10px 12px; border-radius:12px; box-shadow: 0 6px 18px rgba(38,34,56,0.04); font-weight:600; color:var(--muted) }
+    .feature .icon{ width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; font-size:18px }
+
+    /* footer */
+    .site-footer{ margin-top:40px; background: linear-gradient(90deg, rgba(210,200,255,0.28), rgba(250,248,255,0.6)); padding:18px 12px; text-align:center; border-top-left-radius:18px; border-top-right-radius:18px }
+    .site-footer .slogan{ font-weight:600; color:#555; margin-bottom:6px }
+    .site-footer .meta{ color:#777; font-size:0.95rem }
+    .social{ display:inline-flex; gap:12px; margin-left:8px; vertical-align:middle }
+    .social a{ display:inline-flex; width:34px; height:34px; align-items:center; justify-content:center; border-radius:8px; color:#8b8b95; transition: color .18s ease, background .18s ease }
+    .social a svg{ width:18px; height:18px; fill:currentColor }
+    .social a:hover{ color:var(--lavender-2); background: rgba(205,184,255,0.08) }
+    @media (max-width:720px){ .features{ justify-content:center; flex-wrap:wrap } }
     </style>
 </head>
 <body>
@@ -109,8 +123,29 @@
                 The ultimate solution for sparkling clean dishes. Discowasher combines innovative technology with sleek design, making dishwashing effortless and stylish. Enjoy powerful cleaning, energy efficiency, and a modern look that fits any kitchen.
             </p>
             <a href="order.html"><button class="cta-btn">Shop Now</button></a>
+            <div class="features" aria-hidden="false">
+                <div class="feature"><span class="icon">💧</span> Uses less water</div>
+                <div class="feature"><span class="icon">⚡</span> 5-minute cycles</div>
+                <div class="feature"><span class="icon">🎵</span> Music & lights sync</div>
+            </div>
         </div>
     </div>
+    <footer class="site-footer">
+        <div class="slogan">Because doing the dishes should be a party.</div>
+        <div class="meta">Made with love in Sweden | © 2025 Discowasher AB
+            <span class="social" aria-label="Follow us">
+                <a href="#" aria-label="Instagram">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 6.2A3.8 3.8 0 1 0 15.8 12 3.8 3.8 0 0 0 12 8.2zm4.5-.7a1.1 1.1 0 1 1-1.1 1.1 1.1 1.1 0 0 1 1.1-1.1z"/></svg>
+                </a>
+                <a href="#" aria-label="TikTok">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 3v12.2A5 5 0 1 0 14 20V7h3V3h-8z"/></svg>
+                </a>
+                <a href="#" aria-label="Facebook">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 3h3V0h-3a5 5 0 0 0-5 5v3H6v4h2v8h4v-8h3l1-4h-4V5a1 1 0 0 1 1-1z"/></svg>
+                </a>
+            </span>
+        </div>
+    </footer>
     <!-- Confetti canvas -->
     <canvas id="confetti-canvas" class="confetti-canvas" aria-hidden="true"></canvas>
 

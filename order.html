@@ -78,17 +78,82 @@
             text-align: center;
         }
     </style>
-    <script>
-        function handleOrder(e) {
-            e.preventDefault();
-            document.getElementById('order-success').style.display = 'block';
-            e.target.reset();
+    <style>
+        /* Modal styles for out-of-stock popup */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
         }
+        .modal {
+            background: #fff;
+            max-width: 420px;
+            width: calc(100% - 40px);
+            padding: 20px 22px;
+            border-radius: 12px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+            text-align: center;
+        }
+        .modal h3 { margin-top: 0; color: #3f51b5; }
+        .modal p { color: #333; margin: 12px 0 18px 0; }
+        .modal .modal-actions { display:flex; gap:12px; justify-content:center; }
+        .btn { padding:10px 16px; border-radius:8px; font-weight:600; cursor:pointer; border: none; }
+        .btn-primary { background:#3f51b5; color:#fff; }
+        .btn-ghost { background:transparent; color:#3f51b5; border:1px solid #d1d8ff; }
+    </style>
+
+    <script>
+        // Show an out-of-stock modal when the user attempts to place an order / pay.
+        (function(){
+            const form = null;
+            function handleOrder(e){
+                e.preventDefault();
+                showOutOfStockModal();
+            }
+
+            function showOutOfStockModal(){
+                const backdrop = document.getElementById('oos-backdrop');
+                backdrop.style.display = 'flex';
+                const closeBtn = document.getElementById('oos-close');
+                // move focus to close button for accessibility
+                closeBtn.focus();
+                // prevent background scroll
+                document.body.style.overflow = 'hidden';
+            }
+
+            function hideOutOfStockModal(){
+                const backdrop = document.getElementById('oos-backdrop');
+                backdrop.style.display = 'none';
+                document.body.style.overflow = '';
+                // return focus to submit button
+                const submit = document.querySelector('.order-form button[type="submit"]');
+                if(submit) submit.focus();
+            }
+
+            // wire up event listeners after DOM loads
+            window.addEventListener('DOMContentLoaded', function(){
+                const frm = document.querySelector('.order-form');
+                if(frm) frm.addEventListener('submit', handleOrder);
+                document.getElementById('oos-close').addEventListener('click', hideOutOfStockModal);
+                document.getElementById('oos-ok').addEventListener('click', hideOutOfStockModal);
+                // allow Esc to close
+                window.addEventListener('keydown', function(e){
+                    if(e.key === 'Escape'){
+                        const backdrop = document.getElementById('oos-backdrop');
+                        if(backdrop && backdrop.style.display === 'flex') hideOutOfStockModal();
+                    }
+                });
+            });
+        })();
     </script>
 </head>
 <body>
     <div class="header">
-        <img src="Logo.jpg" alt="Discowasher Logo">
+    <img src="logo.png" alt="Discowasher Logo">
         <div class="brand">Discowasher</div>
     </div>
     <form class="order-form" onsubmit="handleOrder(event)">
@@ -110,5 +175,17 @@
         <button type="submit">Place Order</button>
         <div id="order-success" class="success" style="display:none;">Thank you for your order! We'll be in touch soon.</div>
     </form>
+
+    <!-- Out of stock modal -->
+    <div id="oos-backdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="oos-title" style="display:none;">
+        <div class="modal" role="document">
+            <h3 id="oos-title">Victim of its success</h3>
+            <p>Sorry — there are currently no more stocks of the Discowasher. Stay tuned for restock updates.</p>
+            <div class="modal-actions">
+                <button id="oos-ok" class="btn btn-primary">Got it</button>
+                <button id="oos-close" class="btn btn-ghost">Close</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

@@ -9,7 +9,7 @@
         body {
             margin: 0;
             font-family: 'Roboto', Arial, sans-serif;
-            background: #f8f9fa;
+            background: linear-gradient(180deg, #f6f4fb 0%, #fbf9ff 50%, #fffefe 100%);
             color: #222;
         }
         .header {
@@ -18,11 +18,12 @@
             text-align: center;
         }
         .header img {
-            width: 90px;
+            width: 130px;
             height: auto;
             border-radius: 12px;
-            box-shadow: 0 4px 24px rgba(63,81,181,0.12);
+            box-shadow: 0 6px 22px rgba(63,81,181,0.12);
         }
+        @media (max-width:420px){ .header img{ width:96px; } }
         .brand {
             font-family: 'Montserrat', Arial, sans-serif;
             font-size: 2.2rem;

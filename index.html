@@ -9,7 +9,8 @@
         body {
             margin: 0;
             font-family: 'Roboto', Arial, sans-serif;
-            background: #f8f9fa;
+            /* faded lavender / pearl background */
+            background: linear-gradient(180deg, #f6f4fb 0%, #fbf9ff 50%, #fffefe 100%);
             color: #222;
         }
         .header {
@@ -18,10 +19,10 @@
             text-align: center;
         }
         .header img {
-            width: 120px;
+            width: 160px; /* larger logo */
             height: auto;
             border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(63,81,181,0.15);
+            box-shadow: 0 6px 30px rgba(63,81,181,0.12);
             cursor: pointer; /* make it obvious the logo is clickable */
             transition: transform 150ms ease;
         }
@@ -98,6 +99,9 @@
                 flex-direction: column;
                 gap: 24px;
             }
+        }
+        @media (max-width: 420px) {
+            .header img { width: 110px; }
         }
     </style>
 </head>
